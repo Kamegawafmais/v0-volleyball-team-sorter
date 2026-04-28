@@ -3,51 +3,13 @@
 import { Crown, Star, User } from "lucide-react";
 import type { Team } from "@/lib/players-data";
 import { teamColorLabels, levelLabels } from "@/lib/players-data";
+import { defaultTeamColorsConfig, generateTeamStyles, getTeamColorsConfig } from "@/lib/team-colors-config";
 import { cn } from "@/lib/utils";
 
 interface TeamCardProps {
   team: Team;
   index: number;
 }
-
-const colorStyles: Record<string, { bg: string; border: string; text: string; accent: string }> = {
-  rosa: {
-    bg: "bg-pink-500/10",
-    border: "border-pink-500/30",
-    text: "text-pink-400",
-    accent: "bg-pink-500",
-  },
-  amarelo: {
-    bg: "bg-yellow-500/10",
-    border: "border-yellow-500/30",
-    text: "text-yellow-400",
-    accent: "bg-yellow-500",
-  },
-  laranja: {
-    bg: "bg-orange-500/10",
-    border: "border-orange-500/30",
-    text: "text-orange-400",
-    accent: "bg-orange-500",
-  },
-  magenta: {
-    bg: "bg-fuchsia-500/10",
-    border: "border-fuchsia-500/30",
-    text: "text-fuchsia-400",
-    accent: "bg-fuchsia-500",
-  },
-  verde: {
-    bg: "bg-emerald-500/10",
-    border: "border-emerald-500/30",
-    text: "text-emerald-400",
-    accent: "bg-emerald-500",
-  },
-  azul: {
-    bg: "bg-blue-500/10",
-    border: "border-blue-500/30",
-    text: "text-blue-400",
-    accent: "bg-blue-500",
-  },
-};
 
 const levelIcons = {
   peso1: Crown,
@@ -56,7 +18,9 @@ const levelIcons = {
 };
 
 export function TeamCard({ team, index }: TeamCardProps) {
-  const styles = colorStyles[team.color];
+  const config = getTeamColorsConfig();
+  const base = config[team.color]?.base ?? defaultTeamColorsConfig[team.color].base;
+  const styles = generateTeamStyles(base);
 
   return (
     <div
