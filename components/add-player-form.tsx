@@ -21,7 +21,7 @@ interface AddPlayerFormProps {
 
 export function AddPlayerForm({ onAdd }: AddPlayerFormProps) {
   const [name, setName] = useState("");
-  const [level, setLevel] = useState<PlayerLevel>("peso3");
+  const [level, setLevel] = useState<PlayerLevel>("peso4");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +47,7 @@ export function AddPlayerForm({ onAdd }: AddPlayerFormProps) {
           <SelectItem value="peso1">S</SelectItem>
           <SelectItem value="peso2">A</SelectItem>
           <SelectItem value="peso3">B</SelectItem>
+          <SelectItem value="peso4">C</SelectItem>
         </SelectContent>
       </Select>
       <Button type="submit" disabled={!name.trim()} className="gap-2">

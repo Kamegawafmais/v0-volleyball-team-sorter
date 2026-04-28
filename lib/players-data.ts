@@ -1,4 +1,4 @@
-export type PlayerLevel = "peso1" | "peso2" | "peso3";
+export type PlayerLevel = "peso1" | "peso2" | "peso3" | "peso4";
 
 export type TeamColor = "rosa" | "amarelo" | "laranja" | "magenta" | "verde" | "azul";
 
@@ -60,6 +60,13 @@ export const initialPlayersDatabase: Player[] = [
   { id: "40", name: "Daniel", level: "peso3", active: true },
   { id: "41", name: "Nicole", level: "peso3", active: true },
   { id: "42", name: "Barbara", level: "peso3", active: true },
+
+  { id: "43", name: "Marina", level: "peso4", active: true },
+  { id: "44", name: "Carlos", level: "peso4", active: true },
+  { id: "45", name: "Fernanda", level: "peso4", active: true },
+  { id: "46", name: "Igor", level: "peso4", active: true },
+  { id: "47", name: "Patricia", level: "peso4", active: true },
+  { id: "48", name: "Renan", level: "peso4", active: true },
 ];
 
 export const teamColors: TeamColor[] = ["rosa", "amarelo", "laranja", "magenta", "verde", "azul"];
@@ -68,6 +75,7 @@ export const levelLabels: Record<PlayerLevel, string> = {
   peso1: "S",
   peso2: "A",
   peso3: "B",
+  peso4: "C",
 };
 
 export const teamColorLabels: Record<TeamColor, string> = {
