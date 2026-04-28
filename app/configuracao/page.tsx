@@ -1,15 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { RotateCcw, Search, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { RotateCcw, Save, Search, Users } from "lucide-react";
 import { Header } from "@/components/header";
 import { PlayerCard } from "@/components/player-card";
 import { AddPlayerForm } from "@/components/add-player-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePlayersStore } from "@/lib/use-players-store";
-import { levelLabels } from "@/lib/players-data";
-import type { PlayerLevel } from "@/lib/players-data";
+import { levelLabels, teamColorLabels, teamColors } from "@/lib/players-data";
+import type { PlayerLevel, TeamColor } from "@/lib/players-data";
+import {
+  defaultTeamColorsConfig,
+  getTeamColorsConfig,
+  saveTeamColorsConfig,
+  type TeamColorsConfig,
+} from "@/lib/team-colors-config";
+import { cn } from "@/lib/utils";
 
 export default function ConfiguracaoPage() {
   const {
@@ -24,6 +31,11 @@ export default function ConfiguracaoPage() {
 
   const [search, setSearch] = useState("");
   const [filterLevel, setFilterLevel] = useState<PlayerLevel | "all">("all");
+  const [teamColorsConfig, setTeamColorsConfig] = useState<TeamColorsConfig>(defaultTeamColorsConfig);
+
+  useEffect(() => {
+    setTeamColorsConfig(getTeamColorsConfig());
+  }, []);
 
   const filteredPlayers = players.filter((player) => {
     const matchesSearch = player.name.toLowerCase().includes(search.toLowerCase());
@@ -43,21 +55,91 @@ export default function ConfiguracaoPage() {
     Math.floor(countByLevel.peso3 / 2)
   );
 
+  const handleColorChange = (
+    teamColor: TeamColor,
+    key: keyof TeamColorsConfig[TeamColor],
+    value: string
+  ) => {
+    setTeamColorsConfig((prev) => ({
+      ...prev,
+      [teamColor]: {
+        ...prev[teamColor],
+        [key]: value,
+      },
+    }));
+  };
+
+  const handleSaveTeamColors = () => {
+    saveTeamColorsConfig(teamColorsConfig);
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <main className="mx-auto max-w-5xl px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold uppercase tracking-wide text-foreground">
-            Configuracao
-          </h1>
-          <p className="mt-1 text-muted-foreground">
-            Gerencie os jogadores e seus niveis
-          </p>
+          <h1 className="text-3xl font-bold uppercase tracking-wide text-foreground">Configuracao</h1>
+          <p className="mt-1 text-muted-foreground">Gerencie os jogadores, niveis e cores dos times</p>
         </div>
 
-        {/* Stats Cards */}
+        <div className="mb-8 rounded-xl border border-border bg-card p-6">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">Cores dos Times</h2>
+              <p className="text-sm text-muted-foreground">
+                Personalize as classes Tailwind de fundo, borda, texto e destaque de cada time.
+              </p>
+            </div>
+            <Button onClick={handleSaveTeamColors} className="gap-2">
+              <Save className="h-4 w-4" />
+              Salvar
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            {teamColors.map((teamColor) => {
+              const config = teamColorsConfig[teamColor] ?? defaultTeamColorsConfig[teamColor];
+              return (
+                <div key={teamColor} className="rounded-lg border border-border/80 bg-background/40 p-4">
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <h3 className="font-semibold text-foreground">Time {teamColorLabels[teamColor]}</h3>
+                    <div className={cn("rounded-md border px-3 py-1 text-sm font-medium", config.border, config.bg, config.text)}>
+                      Preview
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                    {(["bg", "border", "text", "accent"] as const).map((field) => (
+                      <div key={field}>
+                        <label className="mb-1 block text-xs uppercase tracking-wide text-muted-foreground">
+                          {field}
+                        </label>
+                        <Input
+                          value={config[field]}
+                          onChange={(event) => handleColorChange(teamColor, field, event.target.value)}
+                          placeholder={`Classe Tailwind para ${field}`}
+                          className="bg-secondary"
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className={cn("mt-4 overflow-hidden rounded-lg border", config.border, config.bg)}>
+                    <div className={cn("px-4 py-2 text-sm font-semibold text-white", config.accent)}>
+                      Time {teamColorLabels[teamColor]}
+                    </div>
+                    <div className="px-4 py-3 text-sm text-muted-foreground">
+                      Exemplo de card com as cores configuradas.
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <div className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-3">
@@ -87,7 +169,6 @@ export default function ConfiguracaoPage() {
           </div>
         </div>
 
-        {/* Teams possible info */}
         <div className="mb-8 rounded-xl border border-border bg-card p-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
@@ -101,13 +182,11 @@ export default function ConfiguracaoPage() {
           </div>
         </div>
 
-        {/* Add Player Form */}
         <div className="mb-8 rounded-xl border border-border bg-card p-6">
           <h2 className="mb-4 text-lg font-semibold text-foreground">Adicionar Jogador</h2>
           <AddPlayerForm onAdd={addPlayer} />
         </div>
 
-        {/* Filters */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative flex-1 sm:max-w-xs">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -150,7 +229,6 @@ export default function ConfiguracaoPage() {
           </div>
         </div>
 
-        {/* Players List */}
         <div className="space-y-3">
           {filteredPlayers.length === 0 ? (
             <div className="rounded-xl border border-dashed border-border bg-card/50 p-12 text-center">
