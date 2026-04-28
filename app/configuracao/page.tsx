@@ -49,12 +49,14 @@ export default function ConfiguracaoPage() {
     peso1: activePlayers.filter((p) => p.level === "peso1").length,
     peso2: activePlayers.filter((p) => p.level === "peso2").length,
     peso3: activePlayers.filter((p) => p.level === "peso3").length,
+    peso4: activePlayers.filter((p) => p.level === "peso4").length,
   };
 
   const possibleTeams = Math.min(
     countByLevel.peso1,
-    Math.floor(countByLevel.peso2 / 3),
-    Math.floor(countByLevel.peso3 / 2)
+    Math.floor(countByLevel.peso2 / 2),
+    countByLevel.peso3,
+    Math.floor(countByLevel.peso4 / 2)
   );
 
   const handleBaseColorChange = (teamColor: TeamColor, value: string) => {
@@ -139,7 +141,7 @@ export default function ConfiguracaoPage() {
           </div>
         </div>
 
-        <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-5">
           <div className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
@@ -166,6 +168,11 @@ export default function ConfiguracaoPage() {
             <p className="text-2xl font-bold text-emerald-400">{countByLevel.peso3}</p>
             <p className="text-xs text-muted-foreground">B</p>
           </div>
+
+          <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
+            <p className="text-2xl font-bold text-purple-400">{countByLevel.peso4}</p>
+            <p className="text-xs text-muted-foreground">C</p>
+          </div>
         </div>
 
         <div className="mb-8 rounded-xl border border-border bg-card p-4">
@@ -176,7 +183,7 @@ export default function ConfiguracaoPage() {
             </div>
             <div className="text-right text-sm text-muted-foreground">
               <p>Necessario por time:</p>
-              <p>1 S + 3 A + 2 B</p>
+              <p>1 S + 2 A + 1 B + 2 C</p>
             </div>
           </div>
         </div>
@@ -205,7 +212,7 @@ export default function ConfiguracaoPage() {
             >
               Todos
             </Button>
-            {(["peso1", "peso2", "peso3"] as PlayerLevel[]).map((level) => (
+            {(["peso1", "peso2", "peso3", "peso4"] as PlayerLevel[]).map((level) => (
               <Button
                 key={level}
                 variant={filterLevel === level ? "default" : "secondary"}

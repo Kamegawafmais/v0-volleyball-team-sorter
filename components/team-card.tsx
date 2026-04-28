@@ -15,6 +15,7 @@ const levelIcons = {
   peso1: Crown,
   peso2: Star,
   peso3: User,
+  peso4: User,
 };
 
 export function TeamCard({ team, index }: TeamCardProps) {
@@ -61,7 +62,9 @@ export function TeamCard({ team, index }: TeamCardProps) {
                     ? "bg-primary/20 text-primary"
                     : player.level === "peso2"
                       ? "bg-blue-500/20 text-blue-400"
-                      : "bg-emerald-500/20 text-emerald-400"
+                      : player.level === "peso3"
+                        ? "bg-emerald-500/20 text-emerald-400"
+                        : "bg-purple-500/20 text-purple-400"
                 )}
               >
                 <Icon className="h-4 w-4" />
