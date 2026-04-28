@@ -3,7 +3,7 @@
 import { Crown, Star, User } from "lucide-react";
 import type { Team } from "@/lib/players-data";
 import { teamColorLabels, levelLabels } from "@/lib/players-data";
-import { defaultTeamColorsConfig, getTeamColorsConfig } from "@/lib/team-colors-config";
+import { defaultTeamColorsConfig, generateTeamStyles, getTeamColorsConfig } from "@/lib/team-colors-config";
 import { cn } from "@/lib/utils";
 
 interface TeamCardProps {
@@ -19,7 +19,8 @@ const levelIcons = {
 
 export function TeamCard({ team, index }: TeamCardProps) {
   const config = getTeamColorsConfig();
-  const styles = config[team.color] ?? defaultTeamColorsConfig[team.color];
+  const base = config[team.color]?.base ?? defaultTeamColorsConfig[team.color].base;
+  const styles = generateTeamStyles(base);
 
   return (
     <div

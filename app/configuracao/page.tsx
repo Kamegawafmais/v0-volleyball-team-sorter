@@ -12,6 +12,7 @@ import { levelLabels, teamColorLabels, teamColors } from "@/lib/players-data";
 import type { PlayerLevel, TeamColor } from "@/lib/players-data";
 import {
   defaultTeamColorsConfig,
+  generateTeamStyles,
   getTeamColorsConfig,
   saveTeamColorsConfig,
   type TeamColorsConfig,
@@ -55,17 +56,10 @@ export default function ConfiguracaoPage() {
     Math.floor(countByLevel.peso3 / 2)
   );
 
-  const handleColorChange = (
-    teamColor: TeamColor,
-    key: keyof TeamColorsConfig[TeamColor],
-    value: string
-  ) => {
+  const handleBaseColorChange = (teamColor: TeamColor, value: string) => {
     setTeamColorsConfig((prev) => ({
       ...prev,
-      [teamColor]: {
-        ...prev[teamColor],
-        [key]: value,
-      },
+      [teamColor]: { base: value },
     }));
   };
 
@@ -89,7 +83,7 @@ export default function ConfiguracaoPage() {
             <div>
               <h2 className="text-lg font-semibold text-foreground">Cores dos Times</h2>
               <p className="text-sm text-muted-foreground">
-                Personalize as classes Tailwind de fundo, borda, texto e destaque de cada time.
+                Use cores do Tailwind: pink, blue, emerald, yellow, red...
               </p>
             </div>
             <Button onClick={handleSaveTeamColors} className="gap-2">
@@ -101,33 +95,31 @@ export default function ConfiguracaoPage() {
           <div className="space-y-4">
             {teamColors.map((teamColor) => {
               const config = teamColorsConfig[teamColor] ?? defaultTeamColorsConfig[teamColor];
+              const styles = generateTeamStyles(config.base);
+
               return (
                 <div key={teamColor} className="rounded-lg border border-border/80 bg-background/40 p-4">
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <h3 className="font-semibold text-foreground">Time {teamColorLabels[teamColor]}</h3>
-                    <div className={cn("rounded-md border px-3 py-1 text-sm font-medium", config.border, config.bg, config.text)}>
+                    <div className={cn("rounded-md border px-3 py-1 text-sm font-medium", styles.border, styles.bg, styles.text)}>
                       Preview
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                    {(["bg", "border", "text", "accent"] as const).map((field) => (
-                      <div key={field}>
-                        <label className="mb-1 block text-xs uppercase tracking-wide text-muted-foreground">
-                          {field}
-                        </label>
-                        <Input
-                          value={config[field]}
-                          onChange={(event) => handleColorChange(teamColor, field, event.target.value)}
-                          placeholder={`Classe Tailwind para ${field}`}
-                          className="bg-secondary"
-                        />
-                      </div>
-                    ))}
+                  <div>
+                    <label className="mb-1 block text-xs uppercase tracking-wide text-muted-foreground">
+                      Cor Base
+                    </label>
+                    <Input
+                      value={config.base}
+                      onChange={(event) => handleBaseColorChange(teamColor, event.target.value)}
+                      placeholder="Ex: pink, blue, emerald"
+                      className="bg-secondary"
+                    />
                   </div>
 
-                  <div className={cn("mt-4 overflow-hidden rounded-lg border", config.border, config.bg)}>
-                    <div className={cn("px-4 py-2 text-sm font-semibold text-white", config.accent)}>
+                  <div className={cn("mt-4 overflow-hidden rounded-lg border", styles.border, styles.bg)}>
+                    <div className={cn("px-4 py-2 text-sm font-semibold text-white", styles.accent)}>
                       Time {teamColorLabels[teamColor]}
                     </div>
                     <div className="px-4 py-3 text-sm text-muted-foreground">

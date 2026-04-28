@@ -1,53 +1,29 @@
 import type { TeamColor } from "@/lib/players-data";
 
-export type TeamColorStyleConfig = {
-  bg: string;
-  border: string;
-  text: string;
-  accent: string;
+export type TeamColorConfig = {
+  base: string;
 };
 
-export type TeamColorsConfig = Record<TeamColor, TeamColorStyleConfig>;
+export type TeamColorsConfig = Record<TeamColor, TeamColorConfig>;
 
 const STORAGE_KEY = "team-colors-config";
 
 export const defaultTeamColorsConfig: TeamColorsConfig = {
-  rosa: {
-    bg: "bg-pink-500/10",
-    border: "border-pink-500/30",
-    text: "text-pink-400",
-    accent: "bg-pink-500",
-  },
-  amarelo: {
-    bg: "bg-yellow-500/10",
-    border: "border-yellow-500/30",
-    text: "text-yellow-400",
-    accent: "bg-yellow-500",
-  },
-  laranja: {
-    bg: "bg-orange-500/10",
-    border: "border-orange-500/30",
-    text: "text-orange-400",
-    accent: "bg-orange-500",
-  },
-  magenta: {
-    bg: "bg-fuchsia-500/10",
-    border: "border-fuchsia-500/30",
-    text: "text-fuchsia-400",
-    accent: "bg-fuchsia-500",
-  },
-  verde: {
-    bg: "bg-emerald-500/10",
-    border: "border-emerald-500/30",
-    text: "text-emerald-400",
-    accent: "bg-emerald-500",
-  },
-  azul: {
-    bg: "bg-blue-500/10",
-    border: "border-blue-500/30",
-    text: "text-blue-400",
-    accent: "bg-blue-500",
-  },
+  rosa: { base: "pink" },
+  amarelo: { base: "yellow" },
+  laranja: { base: "orange" },
+  magenta: { base: "fuchsia" },
+  verde: { base: "emerald" },
+  azul: { base: "blue" },
+};
+
+export const generateTeamStyles = (base: string) => {
+  return {
+    bg: `bg-${base}-500/10`,
+    border: `border-${base}-500/30`,
+    text: `text-${base}-400`,
+    accent: `bg-${base}-500`,
+  };
 };
 
 const mergeWithDefault = (partial?: Partial<TeamColorsConfig> | null): TeamColorsConfig => {
