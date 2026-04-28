@@ -15,6 +15,7 @@ import {
   generateTeamStyles,
   getTeamColorsConfig,
   saveTeamColorsConfig,
+  teamBaseColorOptions,
   type TeamColorsConfig,
 } from "@/lib/team-colors-config";
 import { cn } from "@/lib/utils";
@@ -59,7 +60,7 @@ export default function ConfiguracaoPage() {
   const handleBaseColorChange = (teamColor: TeamColor, value: string) => {
     setTeamColorsConfig((prev) => ({
       ...prev,
-      [teamColor]: { base: value },
+      [teamColor]: { base: value as TeamColorsConfig[TeamColor]["base"] },
     }));
   };
 
@@ -83,7 +84,7 @@ export default function ConfiguracaoPage() {
             <div>
               <h2 className="text-lg font-semibold text-foreground">Cores dos Times</h2>
               <p className="text-sm text-muted-foreground">
-                Use cores do Tailwind: pink, blue, emerald, yellow, red...
+                Escolha em português (mínimo 10 opções): preto, branco e cores vivas.
               </p>
             </div>
             <Button onClick={handleSaveTeamColors} className="gap-2">
@@ -93,6 +94,11 @@ export default function ConfiguracaoPage() {
           </div>
 
           <div className="space-y-4">
+                  <datalist id="opcoes-cores-time">
+                    {teamBaseColorOptions.map((option) => (
+                      <option key={option} value={option} />
+                    ))}
+                  </datalist>
             {teamColors.map((teamColor) => {
               const config = teamColorsConfig[teamColor] ?? defaultTeamColorsConfig[teamColor];
               const styles = generateTeamStyles(config.base);
@@ -113,7 +119,8 @@ export default function ConfiguracaoPage() {
                     <Input
                       value={config.base}
                       onChange={(event) => handleBaseColorChange(teamColor, event.target.value)}
-                      placeholder="Ex: pink, blue, emerald"
+                      placeholder="Ex: azul, vermelho, preto"
+                      list="opcoes-cores-time"
                       className="bg-secondary"
                     />
                   </div>

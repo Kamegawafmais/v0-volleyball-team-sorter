@@ -1,23 +1,90 @@
 import type { TeamColor } from "@/lib/players-data";
 
+export type TeamBaseColorName =
+  | "rosa"
+  | "amarelo"
+  | "laranja"
+  | "magenta"
+  | "verde"
+  | "azul"
+  | "vermelho"
+  | "roxo"
+  | "ciano"
+  | "preto"
+  | "branco";
+
 export type TeamColorConfig = {
-  base: string;
+  base: TeamBaseColorName;
 };
 
 export type TeamColorsConfig = Record<TeamColor, TeamColorConfig>;
 
 const STORAGE_KEY = "team-colors-config";
 
-export const defaultTeamColorsConfig: TeamColorsConfig = {
-  rosa: { base: "pink" },
-  amarelo: { base: "yellow" },
-  laranja: { base: "orange" },
-  magenta: { base: "fuchsia" },
-  verde: { base: "emerald" },
-  azul: { base: "blue" },
+const baseColorMap: Record<TeamBaseColorName, string> = {
+  rosa: "pink",
+  amarelo: "yellow",
+  laranja: "orange",
+  magenta: "fuchsia",
+  verde: "emerald",
+  azul: "blue",
+  vermelho: "red",
+  roxo: "purple",
+  ciano: "cyan",
+  preto: "black",
+  branco: "white",
 };
 
-export const generateTeamStyles = (base: string) => {
+export const teamBaseColorOptions: TeamBaseColorName[] = [
+  "rosa",
+  "amarelo",
+  "laranja",
+  "magenta",
+  "verde",
+  "azul",
+  "vermelho",
+  "roxo",
+  "ciano",
+  "preto",
+  "branco",
+];
+
+export const defaultTeamColorsConfig: TeamColorsConfig = {
+  rosa: { base: "rosa" },
+  amarelo: { base: "amarelo" },
+  laranja: { base: "laranja" },
+  magenta: { base: "magenta" },
+  verde: { base: "verde" },
+  azul: { base: "azul" },
+};
+
+const resolveBaseColor = (base: string): TeamBaseColorName => {
+  const lower = base.toLowerCase() as TeamBaseColorName;
+  return teamBaseColorOptions.includes(lower) ? lower : "azul";
+};
+
+export const generateTeamStyles = (baseColorName: string) => {
+  const resolvedBase = resolveBaseColor(baseColorName);
+  const base = baseColorMap[resolvedBase];
+
+  if (base === "black") {
+    return {
+      bg: "bg-black/20",
+      border: "border-black/40",
+      text: "text-neutral-200",
+      accent: "bg-black",
+    };
+  }
+
+  if (base === "white") {
+    return {
+      bg: "bg-white/20",
+      border: "border-white/40",
+      text: "text-white",
+      accent: "bg-white",
+    };
+  }
+
   return {
     bg: `bg-${base}-500/10`,
     border: `border-${base}-500/30`,
@@ -30,38 +97,28 @@ const mergeWithDefault = (partial?: Partial<TeamColorsConfig> | null): TeamColor
   const base = defaultTeamColorsConfig;
 
   return {
-    rosa: { ...base.rosa, ...(partial?.rosa ?? {}) },
-    amarelo: { ...base.amarelo, ...(partial?.amarelo ?? {}) },
-    laranja: { ...base.laranja, ...(partial?.laranja ?? {}) },
-    magenta: { ...base.magenta, ...(partial?.magenta ?? {}) },
-    verde: { ...base.verde, ...(partial?.verde ?? {}) },
-    azul: { ...base.azul, ...(partial?.azul ?? {}) },
+    rosa: { base: resolveBaseColor(partial?.rosa?.base ?? base.rosa.base) },
+    amarelo: { base: resolveBaseColor(partial?.amarelo?.base ?? base.amarelo.base) },
+    laranja: { base: resolveBaseColor(partial?.laranja?.base ?? base.laranja.base) },
+    magenta: { base: resolveBaseColor(partial?.magenta?.base ?? base.magenta.base) },
+    verde: { base: resolveBaseColor(partial?.verde?.base ?? base.verde.base) },
+    azul: { base: resolveBaseColor(partial?.azul?.base ?? base.azul.base) },
   };
 };
 
 export const getTeamColorsConfig = (): TeamColorsConfig => {
-  if (typeof window === "undefined") {
-    return defaultTeamColorsConfig;
-  }
-
+  if (typeof window === "undefined") return defaultTeamColorsConfig;
   const raw = window.localStorage.getItem(STORAGE_KEY);
-  if (!raw) {
-    return defaultTeamColorsConfig;
-  }
+  if (!raw) return defaultTeamColorsConfig;
 
   try {
-    const parsed = JSON.parse(raw) as Partial<TeamColorsConfig>;
-    return mergeWithDefault(parsed);
+    return mergeWithDefault(JSON.parse(raw) as Partial<TeamColorsConfig>);
   } catch {
     return defaultTeamColorsConfig;
   }
 };
 
 export const saveTeamColorsConfig = (config: TeamColorsConfig): void => {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  const mergedConfig = mergeWithDefault(config);
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedConfig));
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(mergeWithDefault(config)));
 };
