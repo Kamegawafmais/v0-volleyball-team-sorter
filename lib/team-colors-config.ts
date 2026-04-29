@@ -32,26 +32,26 @@ const mergeWithDefault = (partial?: Partial<TeamColorsConfig> | null): TeamColor
 export const generateTeamStyles = (base: string) => {
   if (base === "white") {
     return {
-      bg: "bg-gray-100",
+      bg: "bg-gray-900/0",
       border: "border-gray-300",
-      text: "text-gray-900",
+      text: "text-gray-500",
       accent: "bg-gray-200",
     };
   }
 
   if (base === "black") {
     return {
-      bg: "bg-gray-900/80",
+      bg: "bg-gray-900/10",
       border: "border-gray-700",
       text: "text-gray-100",
-      accent: "bg-gray-800",
+      accent: "bg-gray-900/40",
     };
   }
 
   return {
-    bg: `bg-${base}-500/10`,
-    border: `border-${base}-500/30`,
-    text: `text-${base}-400`,
+    bg: `bg-${base}-500/50`,
+    border: `border-${base}-500/50`,
+    text: `text-${base}-100`,
     accent: `bg-${base}-500`,
   };
 };
