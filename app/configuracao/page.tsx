@@ -125,11 +125,6 @@ export default function ConfiguracaoPage() {
               );
             })}
           </div>
-
-          <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
-            <p className="text-2xl font-bold text-purple-400">{countByLevel.peso4}</p>
-            <p className="text-xs text-muted-foreground">C</p>
-          </div>
         </div>
 
         <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-5">
