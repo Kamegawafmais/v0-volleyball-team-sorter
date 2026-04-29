@@ -121,6 +121,9 @@ export default function ConfiguracaoPage() {
                       <option key={color.value} value={color.value}>{color.label}</option>
                     ))}
                   </select>
+                  <div className={cn("mt-3 rounded-md border px-4 py-3 text-sm", styles.bg, styles.border, styles.text)}>
+                    Exemplo de card com as cores configuradas.
+                  </div>
                 </div>
               );
             })}

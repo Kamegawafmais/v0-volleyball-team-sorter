@@ -39,10 +39,10 @@ export function TeamCard({ team, index }: TeamCardProps) {
             {index + 1}
           </span>
           <div>
-            <h3 className="text-lg font-bold uppercase tracking-wide text-white">
+            <h3 className={cn("text-lg font-bold uppercase tracking-wide", styles.text)}>
               Time {index + 1}
             </h3>
-            <p className="text-sm text-white/80">{team.players.length} jogadores</p>
+            <p className={cn("text-sm", styles.text)}>{team.players.length} jogadores</p>
           </div>
         </div>
       </div>
