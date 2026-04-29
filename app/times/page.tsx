@@ -78,7 +78,7 @@ export default function TimesPage() {
         {/* Teams Grid */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {teams.map((team, index) => (
-            <TeamCard key={team.color} team={team} index={index} />
+            <TeamCard key={`${team.color}-${index}`} team={team} index={index} />
           ))}
         </div>
 
