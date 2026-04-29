@@ -34,7 +34,7 @@ export const generateTeamStyles = (base: string) => {
     return {
       bg: "bg-gray-100",
       border: "border-gray-300",
-      text: "text-gray-800",
+      text: "text-gray-900",
       accent: "bg-gray-200",
     };
   }

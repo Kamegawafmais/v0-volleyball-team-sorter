@@ -19,20 +19,20 @@ import {
 import { cn } from "@/lib/utils";
 
 const AVAILABLE_COLORS = [
-  "red",
-  "blue",
-  "emerald",
-  "yellow",
-  "purple",
-  "orange",
-  "pink",
-  "cyan",
-  "lime",
-  "amber",
-  "indigo",
-  "teal",
-  "white",
-  "black",
+  { value: "red", label: "Vermelho" },
+  { value: "blue", label: "Azul" },
+  { value: "emerald", label: "Verde" },
+  { value: "yellow", label: "Amarelo" },
+  { value: "purple", label: "Roxo" },
+  { value: "orange", label: "Laranja" },
+  { value: "pink", label: "Rosa" },
+  { value: "cyan", label: "Ciano" },
+  { value: "lime", label: "Lima" },
+  { value: "amber", label: "Âmbar" },
+  { value: "indigo", label: "Índigo" },
+  { value: "teal", label: "Verde-azulado" },
+  { value: "white", label: "Branco" },
+  { value: "black", label: "Preto" },
 ];
 
 export default function ConfiguracaoPage() {
@@ -73,7 +73,7 @@ export default function ConfiguracaoPage() {
   const handleSaveTeamColors = () => {
     const selectedColors = Array.from({ length: possibleTeams }).map((_, index) => {
       const teamKey = `team_${index}`;
-      return teamColorsConfig[teamKey]?.base ?? AVAILABLE_COLORS[index % AVAILABLE_COLORS.length];
+      return teamColorsConfig[teamKey]?.base ?? AVAILABLE_COLORS[index % AVAILABLE_COLORS.length].value;
     });
 
     const hasDuplicates = new Set(selectedColors).size !== selectedColors.length;
@@ -103,22 +103,22 @@ export default function ConfiguracaoPage() {
           <div className="space-y-4">
             {Array.from({ length: possibleTeams }).map((_, index) => {
               const teamKey = `team_${index}`;
-              const config = teamColorsConfig[teamKey] ?? { base: AVAILABLE_COLORS[index % AVAILABLE_COLORS.length] };
+              const config = teamColorsConfig[teamKey] ?? { base: AVAILABLE_COLORS[index % AVAILABLE_COLORS.length].value };
               const styles = generateTeamStyles(config.base);
 
               return (
-                <div key={teamKey} className="rounded-lg border border-border/80 bg-background/40 p-4">
-                  <div className="mb-4 flex items-center justify-between gap-3">
+                <div key={teamKey} className={cn("rounded-lg border border-border/80 bg-background/40 p-4", styles.text)}>
+                  <div className={cn("mb-4 flex items-center justify-between gap-3", styles.text)}>
                     <h3 className="font-semibold text-foreground">Time {index + 1}</h3>
                     <div className={cn("rounded-md border px-3 py-1 text-sm font-medium", styles.border, styles.bg, styles.text)}>Preview</div>
                   </div>
                   <select
-                    value={config.base}
+                    value={AVAILABLE_COLORS.some((color) => color.value === config.base) ? config.base : AVAILABLE_COLORS[0].value}
                     onChange={(e) => handleBaseColorChange(teamKey, e.target.value)}
                     className="w-full rounded-md border bg-secondary px-3 py-2"
                   >
                     {AVAILABLE_COLORS.map((color) => (
-                      <option key={color} value={color}>{color}</option>
+                      <option key={color.value} value={color.value}>{color.label}</option>
                     ))}
                   </select>
                 </div>
