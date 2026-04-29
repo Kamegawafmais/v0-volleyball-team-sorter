@@ -2,7 +2,7 @@
 
 import { Crown, Star, User } from "lucide-react";
 import type { Team } from "@/lib/players-data";
-import { teamColorLabels, levelLabels } from "@/lib/players-data";
+import { levelLabels } from "@/lib/players-data";
 import { defaultTeamColorsConfig, generateTeamStyles, getTeamColorsConfig } from "@/lib/team-colors-config";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +20,8 @@ const levelIcons = {
 
 export function TeamCard({ team, index }: TeamCardProps) {
   const config = getTeamColorsConfig();
-  const base = config[team.color]?.base ?? defaultTeamColorsConfig[team.color].base;
+  const teamKey = `team_${index}`;
+  const base = config[teamKey]?.base ?? defaultTeamColorsConfig[teamKey]?.base ?? "blue";
   const styles = generateTeamStyles(base);
 
   return (
@@ -39,7 +40,7 @@ export function TeamCard({ team, index }: TeamCardProps) {
           </span>
           <div>
             <h3 className="text-lg font-bold uppercase tracking-wide text-white">
-              Time {teamColorLabels[team.color]}
+              Time {index + 1}
             </h3>
             <p className="text-sm text-white/80">{team.players.length} jogadores</p>
           </div>

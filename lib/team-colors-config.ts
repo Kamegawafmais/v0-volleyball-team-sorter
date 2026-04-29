@@ -1,87 +1,50 @@
-import type { TeamColor } from "@/lib/players-data";
-
-export type TeamBaseColorName =
-  | "rosa"
-  | "amarelo"
-  | "laranja"
-  | "magenta"
-  | "verde"
-  | "azul"
-  | "vermelho"
-  | "roxo"
-  | "ciano"
-  | "preto"
-  | "branco";
-
 export type TeamColorConfig = {
-  base: TeamBaseColorName;
+  base: string;
 };
 
-export type TeamColorsConfig = Record<TeamColor, TeamColorConfig>;
+export type TeamColorsConfig = Record<string, TeamColorConfig>;
 
 const STORAGE_KEY = "team-colors-config";
 
-const baseColorMap: Record<TeamBaseColorName, string> = {
-  rosa: "pink",
-  amarelo: "yellow",
-  laranja: "orange",
-  magenta: "fuchsia",
-  verde: "emerald",
-  azul: "blue",
-  vermelho: "red",
-  roxo: "purple",
-  ciano: "cyan",
-  preto: "black",
-  branco: "white",
+const defaultBaseColors = ["red", "blue", "emerald", "yellow", "purple", "orange"];
+
+export const createDefaultTeamColorsConfig = (teamCount = 6): TeamColorsConfig => {
+  return Object.fromEntries(
+    Array.from({ length: teamCount }).map((_, index) => [
+      `team_${index}`,
+      { base: defaultBaseColors[index % defaultBaseColors.length] },
+    ])
+  );
 };
 
-export const teamBaseColorOptions: TeamBaseColorName[] = [
-  "rosa",
-  "amarelo",
-  "laranja",
-  "magenta",
-  "verde",
-  "azul",
-  "vermelho",
-  "roxo",
-  "ciano",
-  "preto",
-  "branco",
-];
+export const defaultTeamColorsConfig: TeamColorsConfig = createDefaultTeamColorsConfig();
 
-export const defaultTeamColorsConfig: TeamColorsConfig = {
-  rosa: { base: "rosa" },
-  amarelo: { base: "amarelo" },
-  laranja: { base: "laranja" },
-  magenta: { base: "magenta" },
-  verde: { base: "verde" },
-  azul: { base: "azul" },
+const mergeWithDefault = (partial?: Partial<TeamColorsConfig> | null): TeamColorsConfig => {
+  const merged: TeamColorsConfig = { ...defaultTeamColorsConfig };
+
+  for (const [key, value] of Object.entries(partial ?? {})) {
+    if (value?.base) merged[key] = { base: value.base };
+  }
+
+  return merged;
 };
 
-const resolveBaseColor = (base: string): TeamBaseColorName => {
-  const lower = base.toLowerCase() as TeamBaseColorName;
-  return teamBaseColorOptions.includes(lower) ? lower : "azul";
-};
-
-export const generateTeamStyles = (baseColorName: string) => {
-  const resolvedBase = resolveBaseColor(baseColorName);
-  const base = baseColorMap[resolvedBase];
-
-  if (base === "black") {
+export const generateTeamStyles = (base: string) => {
+  if (base === "white") {
     return {
-      bg: "bg-black/20",
-      border: "border-black/40",
-      text: "text-neutral-200",
-      accent: "bg-black",
+      bg: "bg-gray-100",
+      border: "border-gray-300",
+      text: "text-gray-800",
+      accent: "bg-gray-200",
     };
   }
 
-  if (base === "white") {
+  if (base === "black") {
     return {
-      bg: "bg-white/20",
-      border: "border-white/40",
-      text: "text-white",
-      accent: "bg-white",
+      bg: "bg-gray-900/80",
+      border: "border-gray-700",
+      text: "text-gray-100",
+      accent: "bg-gray-800",
     };
   }
 
@@ -90,19 +53,6 @@ export const generateTeamStyles = (baseColorName: string) => {
     border: `border-${base}-500/30`,
     text: `text-${base}-400`,
     accent: `bg-${base}-500`,
-  };
-};
-
-const mergeWithDefault = (partial?: Partial<TeamColorsConfig> | null): TeamColorsConfig => {
-  const base = defaultTeamColorsConfig;
-
-  return {
-    rosa: { base: resolveBaseColor(partial?.rosa?.base ?? base.rosa.base) },
-    amarelo: { base: resolveBaseColor(partial?.amarelo?.base ?? base.amarelo.base) },
-    laranja: { base: resolveBaseColor(partial?.laranja?.base ?? base.laranja.base) },
-    magenta: { base: resolveBaseColor(partial?.magenta?.base ?? base.magenta.base) },
-    verde: { base: resolveBaseColor(partial?.verde?.base ?? base.verde.base) },
-    azul: { base: resolveBaseColor(partial?.azul?.base ?? base.azul.base) },
   };
 };
 

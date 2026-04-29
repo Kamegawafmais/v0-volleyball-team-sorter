@@ -28,8 +28,7 @@ export function sortTeams(activePlayers: Player[]): Team[] | { error: string } {
     maxTeamsBycapitaes,
     maxTeamsByIntermediarios,
     maxTeamsByIniciantes,
-    maxTeamsByAvancados,
-    teamColors.length // Máximo de 6 times (cores disponíveis)
+    maxTeamsByAvancados
   );
 
   if (numberOfTeams === 0) {
@@ -47,7 +46,7 @@ export function sortTeams(activePlayers: Player[]): Team[] | { error: string } {
   const shuffledAvancados = shuffleArray(avancados);
 
   // Embaralhar cores
-  const shuffledColors = shuffleArray(teamColors).slice(0, numberOfTeams);
+  const shuffledColors = shuffleArray(teamColors);
 
   // Formar times
   const teams: Team[] = [];
@@ -63,7 +62,7 @@ export function sortTeams(activePlayers: Player[]): Team[] | { error: string } {
     ];
 
     teams.push({
-      color: shuffledColors[i],
+      color: shuffledColors[i % shuffledColors.length],
       players: teamPlayers,
     });
   }

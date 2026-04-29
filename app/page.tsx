@@ -18,12 +18,14 @@ export default function SortPage() {
     peso1: activePlayers.filter((p) => p.level === "peso1").length,
     peso2: activePlayers.filter((p) => p.level === "peso2").length,
     peso3: activePlayers.filter((p) => p.level === "peso3").length,
+    peso4: activePlayers.filter((p) => p.level === "peso4").length,
   };
 
   const possibleTeams = Math.min(
     countByLevel.peso1,
-    Math.floor(countByLevel.peso2 / 3),
-    Math.floor(countByLevel.peso3 / 2)
+    Math.floor(countByLevel.peso2 / 2),
+    countByLevel.peso3,
+    Math.floor(countByLevel.peso4 / 2)
   );
 
   const handleSort = async () => {
@@ -79,7 +81,7 @@ export default function SortPage() {
           </p>
 
           {/* Stats */}
-          <div className="mb-8 grid grid-cols-3 gap-4">
+          <div className="mb-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="rounded-xl border border-primary/30 bg-primary/10 p-4">
               <p className="text-3xl font-bold text-primary">{countByLevel.peso1}</p>
               <p className="text-sm text-muted-foreground">S</p>
@@ -91,6 +93,10 @@ export default function SortPage() {
             <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
               <p className="text-3xl font-bold text-emerald-400">{countByLevel.peso3}</p>
               <p className="text-sm text-muted-foreground">B</p>
+            </div>
+            <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
+              <p className="text-3xl font-bold text-purple-400">{countByLevel.peso4}</p>
+              <p className="text-sm text-muted-foreground">C</p>
             </div>
           </div>
 
@@ -104,7 +110,7 @@ export default function SortPage() {
               </div>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              Cada time: 1 Pessoa S + 3 Pessoa A + 2 Pessoa B
+              Cada time: 1 Pessoa S + 2 Pessoa A + 1 Pessoa B + 2 Pessoa C
             </p>
           </div>
 
