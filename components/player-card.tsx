@@ -24,6 +24,7 @@ const levelColors: Record<PlayerLevel, string> = {
   peso1: "bg-primary/20 text-primary border-primary/30",
   peso2: "bg-blue-500/20 text-blue-400 border-blue-500/30",
   peso3: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+  peso4: "bg-purple-500/20 text-purple-400 border-purple-500/30",
 };
 
 export function PlayerCard({
@@ -81,6 +82,7 @@ export function PlayerCard({
             <SelectItem value="peso1">S</SelectItem>
             <SelectItem value="peso2">A</SelectItem>
             <SelectItem value="peso3">B</SelectItem>
+            <SelectItem value="peso4">C</SelectItem>
           </SelectContent>
         </Select>
 

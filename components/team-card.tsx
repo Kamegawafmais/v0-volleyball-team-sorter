@@ -2,7 +2,8 @@
 
 import { Crown, Star, User } from "lucide-react";
 import type { Team } from "@/lib/players-data";
-import { teamColorLabels, levelLabels } from "@/lib/players-data";
+import { levelLabels } from "@/lib/players-data";
+import { defaultTeamColorsConfig, generateTeamStyles, getTeamColorsConfig } from "@/lib/team-colors-config";
 import { cn } from "@/lib/utils";
 
 interface TeamCardProps {
@@ -10,53 +11,18 @@ interface TeamCardProps {
   index: number;
 }
 
-const colorStyles: Record<string, { bg: string; border: string; text: string; accent: string }> = {
-  rosa: {
-    bg: "bg-pink-500/10",
-    border: "border-pink-500/30",
-    text: "text-pink-400",
-    accent: "bg-pink-500",
-  },
-  amarelo: {
-    bg: "bg-yellow-500/10",
-    border: "border-yellow-500/30",
-    text: "text-yellow-400",
-    accent: "bg-yellow-500",
-  },
-  laranja: {
-    bg: "bg-orange-500/10",
-    border: "border-orange-500/30",
-    text: "text-orange-400",
-    accent: "bg-orange-500",
-  },
-  magenta: {
-    bg: "bg-fuchsia-500/10",
-    border: "border-fuchsia-500/30",
-    text: "text-fuchsia-400",
-    accent: "bg-fuchsia-500",
-  },
-  verde: {
-    bg: "bg-emerald-500/10",
-    border: "border-emerald-500/30",
-    text: "text-emerald-400",
-    accent: "bg-emerald-500",
-  },
-  azul: {
-    bg: "bg-blue-500/10",
-    border: "border-blue-500/30",
-    text: "text-blue-400",
-    accent: "bg-blue-500",
-  },
-};
-
 const levelIcons = {
   peso1: Crown,
   peso2: Star,
   peso3: User,
+  peso4: User,
 };
 
 export function TeamCard({ team, index }: TeamCardProps) {
-  const styles = colorStyles[team.color];
+  const config = getTeamColorsConfig();
+  const teamKey = `team_${index}`;
+  const base = config[teamKey]?.base ?? defaultTeamColorsConfig[teamKey]?.base ?? "blue";
+  const styles = generateTeamStyles(base);
 
   return (
     <div
@@ -74,7 +40,7 @@ export function TeamCard({ team, index }: TeamCardProps) {
           </span>
           <div>
             <h3 className="text-lg font-bold uppercase tracking-wide text-white">
-              Time {teamColorLabels[team.color]}
+              Time {index + 1}
             </h3>
             <p className="text-sm text-white/80">{team.players.length} jogadores</p>
           </div>
@@ -97,7 +63,9 @@ export function TeamCard({ team, index }: TeamCardProps) {
                     ? "bg-primary/20 text-primary"
                     : player.level === "peso2"
                       ? "bg-blue-500/20 text-blue-400"
-                      : "bg-emerald-500/20 text-emerald-400"
+                      : player.level === "peso3"
+                        ? "bg-emerald-500/20 text-emerald-400"
+                        : "bg-purple-500/20 text-purple-400"
                 )}
               >
                 <Icon className="h-4 w-4" />
