@@ -15,25 +15,27 @@ export function sortTeams(activePlayers: Player[]): Team[] | { error: string } {
   const capitaes = activePlayers.filter((p) => p.level === "peso1");
   const intermediarios = activePlayers.filter((p) => p.level === "peso2");
   const iniciantes = activePlayers.filter((p) => p.level === "peso3");
+  const avancados = activePlayers.filter((p) => p.level === "peso4");
 
   // Calcular quantos times completos podemos formar
-  // Cada time precisa: 1 capitão, 3 intermediários, 2 iniciantes
+  // Cada time precisa: 1 capitão, 2 intermediários, 1 iniciante, 2 avançados
   const maxTeamsBycapitaes = capitaes.length;
-  const maxTeamsByIntermediarios = Math.floor(intermediarios.length / 3);
-  const maxTeamsByIniciantes = Math.floor(iniciantes.length / 2);
+  const maxTeamsByIntermediarios = Math.floor(intermediarios.length / 2);
+  const maxTeamsByIniciantes = iniciantes.length;
+  const maxTeamsByAvancados = Math.floor(avancados.length / 2);
 
   const numberOfTeams = Math.min(
     maxTeamsBycapitaes,
     maxTeamsByIntermediarios,
     maxTeamsByIniciantes,
-    teamColors.length // Máximo de 6 times (cores disponíveis)
+    maxTeamsByAvancados
   );
 
   if (numberOfTeams === 0) {
     return {
       error: `Jogadores insuficientes para formar times. 
-      Necessário por time: 1 S, 3 A, 2 B.
-      Disponíveis: ${capitaes.length} S, ${intermediarios.length} A, ${iniciantes.length} B.`,
+      Necessário por time: 1 S, 2 A, 1 B, 2 C.
+      Disponíveis: ${capitaes.length} S, ${intermediarios.length} A, ${iniciantes.length} B, ${avancados.length} C.`,
     };
   }
 
@@ -41,9 +43,10 @@ export function sortTeams(activePlayers: Player[]): Team[] | { error: string } {
   const shuffledcapitaes = shuffleArray(capitaes);
   const shuffledIntermediarios = shuffleArray(intermediarios);
   const shuffledIniciantes = shuffleArray(iniciantes);
+  const shuffledAvancados = shuffleArray(avancados);
 
   // Embaralhar cores
-  const shuffledColors = shuffleArray(teamColors).slice(0, numberOfTeams);
+  const shuffledColors = shuffleArray(teamColors);
 
   // Formar times
   const teams: Team[] = [];
@@ -51,15 +54,15 @@ export function sortTeams(activePlayers: Player[]): Team[] | { error: string } {
   for (let i = 0; i < numberOfTeams; i++) {
     const teamPlayers: Player[] = [
       shuffledcapitaes[i],
-      shuffledIntermediarios[i * 3],
-      shuffledIntermediarios[i * 3 + 1],
-      shuffledIntermediarios[i * 3 + 2],
-      shuffledIniciantes[i * 2],
-      shuffledIniciantes[i * 2 + 1],
+      shuffledIntermediarios[i * 2],
+      shuffledIntermediarios[i * 2 + 1],
+      shuffledIniciantes[i],
+      shuffledAvancados[i * 2],
+      shuffledAvancados[i * 2 + 1],
     ];
 
     teams.push({
-      color: shuffledColors[i],
+      color: shuffledColors[i % shuffledColors.length],
       players: teamPlayers,
     });
   }
