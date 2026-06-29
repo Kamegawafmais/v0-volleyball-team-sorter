@@ -47,6 +47,9 @@
   --team-magenta: oklch(0.6 0.22 320);
   --team-verde: oklch(0.65 0.18 145);
   --team-azul: oklch(0.6 0.18 250);
+
+  /* Bottom nav height for page padding */
+  --bottom-nav-height: 56px;
 }
 
 @theme inline {
@@ -102,5 +105,21 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
   }
+
+  /* Prevent iOS auto-zoom on input focus — must be >= 16px */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Safe area utilities */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.pb-nav {
+  padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 8px);
 }

@@ -36,18 +36,19 @@ export function PlayerCard({
   return (
     <div
       className={cn(
-        "group flex items-center justify-between gap-3 rounded-xl border bg-card p-4 transition-all",
+        "rounded-xl border bg-card p-3 transition-all",
         player.active
           ? "border-border"
           : "border-border/50 opacity-50"
       )}
     >
+      {/* Top Row: Toggle + Name + Level Badge */}
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => onToggleActive(player.id)}
           className={cn(
-            "flex h-10 w-10 items-center justify-center rounded-lg border-2 transition-colors",
+            "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 transition-colors active:scale-95",
             player.active
               ? "border-primary bg-primary/10 text-primary"
               : "border-muted bg-muted text-muted-foreground"
@@ -55,8 +56,8 @@ export function PlayerCard({
         >
           <User className="h-5 w-5" />
         </button>
-        <div className="flex flex-col">
-          <span className={cn("font-medium", !player.active && "line-through")}>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <span className={cn("truncate font-medium", !player.active && "line-through")}>
             {player.name}
           </span>
           <span
@@ -70,12 +71,13 @@ export function PlayerCard({
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      {/* Bottom Row: Level Select + Delete */}
+      <div className="mt-2 flex items-center gap-2 pl-14">
         <Select
           value={player.level}
           onValueChange={(value) => onUpdateLevel(player.id, value as PlayerLevel)}
         >
-          <SelectTrigger className="w-36 bg-secondary">
+          <SelectTrigger className="h-10 flex-1 bg-secondary">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -90,7 +92,7 @@ export function PlayerCard({
           variant="ghost"
           size="icon"
           onClick={() => onRemove(player.id)}
-          className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+          className="h-10 w-10 shrink-0 text-muted-foreground active:bg-destructive/10 active:text-destructive"
         >
           <Trash2 className="h-4 w-4" />
           <span className="sr-only">Remover jogador</span>
